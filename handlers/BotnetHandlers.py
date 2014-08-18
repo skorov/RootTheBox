@@ -30,13 +30,14 @@ from hashlib import sha1
 from libs.ConfigManager import ConfigManager
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
-from models import Box, Team, User
-from models.User import ADMIN_PERMISSION
+from models.Box import Box
+from models.User import User, ADMIN_PERMISSION
 from BaseHandlers import BaseHandler, BaseWebSocketHandler
 from libs.SecurityDecorators import *
 
 
 class BotSocketHandler(tornado.websocket.WebSocketHandler):
+
     '''
     *** Rough bot protocol layout ***
     =================================
@@ -87,7 +88,8 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         box = Box.by_ip_address(self.request.remote_ip)
         self.remote_ip = self.request.remote_ip
         if box is None and self.config.whitelist_box_ips:
-            logging.debug("Rejected bot from '%s' (not a box)" % self.request.remote_ip)
+            logging.debug("Rejected bot from '%s' (not a box)" %
+                          self.request.remote_ip)
             self.write_message({
                 'opcode': 'error',
                 'message': 'Invalid IP address.'
@@ -104,7 +106,8 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             if 'opcode' not in req:
                 raise ValueError('Missing opcode')
             elif req['opcode'] not in self.opcodes:
-                raise ValueError('Invalid opcode in request: %s' % req['opcode'])
+                raise ValueError(
+                    'Invalid opcode in request: %s' % req['opcode'])
             else:
                 self.opcodes[req['opcode']](req)
         except ValueError as error:
@@ -115,7 +118,8 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         ''' Close connection to remote host '''
         if self.uuid in self.bot_manager.botnet:
             self.bot_manager.remove_bot(self)
-        logging.debug("Closing connection to bot at %s" % self.request.remote_ip)
+        logging.debug("Closing connection to bot at %s" %
+                      self.request.remote_ip)
 
     def interrogation_response(self, msg):
         ''' Steps 3 and 4; validate repsonses '''
@@ -172,6 +176,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
 
 
 class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
+
     '''
     Handles the CLI BotMonitor websocket connections, has custom auth.
     TODO: Trash this and use the web api handler, w/ normal session cookie
@@ -191,7 +196,8 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             }
 
     def open(self):
-        logging.debug("Opened new monitor socket to %s" % self.request.remote_ip)
+        logging.debug("Opened new monitor socket to %s" %
+                      self.request.remote_ip)
 
     def on_message(self, message):
         ''' Parse request '''
@@ -200,7 +206,8 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             if 'opcode' not in req:
                 raise ValueError('Missing opcode')
             elif req['opcode'] not in self.opcodes:
-                raise ValueError('Invalid opcode in request: %s' % req['opcode'])
+                raise ValueError(
+                    'Invalid opcode in request: %s' % req['opcode'])
             else:
                 self.opcodes[req['opcode']](req)
         except ValueError as error:
@@ -209,7 +216,8 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
     def on_close(self):
         ''' Close connection to remote host '''
         self.bot_manager.remove_monitor(self)
-        logging.debug("Closing connection to bot monitor at %s" % self.request.remote_ip)
+        logging.debug("Closing connection to bot monitor at %s" %
+                      self.request.remote_ip)
 
     def auth(self, req):
         ''' Authenticate user '''
@@ -225,7 +233,8 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             })
             self.close()
         elif user.validate_password(req.get('password', '')):
-            logging.debug("Monitor socket successfully authenticated as %s" % user.handle)
+            logging.debug(
+                "Monitor socket successfully authenticated as %s" % user.handle)
             self.team_name = ''.join(user.team.name)
             self.bot_manager.add_monitor(self)
             self.write_message({'opcode': 'auth_success'})
@@ -248,6 +257,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
 
 
 class BotWebMonitorHandler(BaseHandler):
+
     ''' Just renders the html page for the web monitor '''
 
     @authenticated
@@ -257,6 +267,7 @@ class BotWebMonitorHandler(BaseHandler):
 
 
 class BotWebMonitorSocketHandler(BaseWebSocketHandler):
+
     '''
     Bot monitor API, requires user to be authenticated with the web app
     TODO: Move the cli api to use this one.
@@ -281,7 +292,8 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
         ''' Only open sockets from authenticated clients '''
         if self.session is not None and 'team_id' in self.session:
             user = self.get_current_user()
-            logging.debug("[Web Socket] Opened web monitor socket with %s" % user.handle)
+            logging.debug(
+                "[Web Socket] Opened web monitor socket with %s" % user.handle)
             self.uuid = unicode(uuid4())
             self.bot_manager = BotManager.instance()
             self.team_name = ''.join(user.team.name)
@@ -289,7 +301,8 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
             bots = self.bot_manager.get_bots(self.team_name)
             self.update(bots)
         else:
-            logging.debug("[Web Socket] Denied web monitor socket to %s" % self.request.remote_ip)
+            logging.debug(
+                "[Web Socket] Denied web monitor socket to %s" % self.request.remote_ip)
             self.bot_manager = None
             self.close()
 
@@ -313,6 +326,7 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
 
 
 class BotDownloadHandler(BaseHandler):
+
     ''' Distributes bot binaries / scripts '''
 
     @authenticated
@@ -330,20 +344,23 @@ class BotDownloadHandler(BaseHandler):
     def windows(self):
         ''' Download Windows PE file '''
         self.set_header("Content-Type", "application/exe")
-        self.set_header("Content-disposition", "attachment; filename=rtb_bot.exe")
+        self.set_header(
+            "Content-disposition", "attachment; filename=rtb_bot.exe")
         if os.path.exists('bot/dist/bot.exe'):
             with open('bot/dist/bot.exe', 'rb') as fp:
                 data = fp.read()
                 self.set_header('Content-Length', len(data))
                 self.write(data)
         else:
-            logging.error("Missing Windows bot file, please run build script: bot/build_bot.py")
+            logging.error(
+                "Missing Windows bot file, please run build script: bot/build_bot.py")
             self.generic()
 
     def generic(self):
         ''' Send them the generic python script '''
         self.set_header("Content-Type", "text/x-python")
-        self.set_header("Content-disposition", "attachment; filename=rtb_bot.py")
+        self.set_header(
+            "Content-disposition", "attachment; filename=rtb_bot.py")
         if os.path.exists('bot/bot.py'):
             with open('bot/bot.py', 'rb') as fp:
                 data = fp.read()
@@ -353,7 +370,8 @@ class BotDownloadHandler(BaseHandler):
     def monitor(self):
         ''' Send curses ui bot monitor '''
         self.set_header("Content-Type", "text/x-python")
-        self.set_header("Content-disposition", "attachment; filename=botnet_monitor.py")
+        self.set_header(
+            "Content-disposition", "attachment; filename=botnet_monitor.py")
         if os.path.exists('bot/BotMonitor.py'):
             with open('bot/BotMonitor.py', 'rb') as fp:
                 data = fp.read()

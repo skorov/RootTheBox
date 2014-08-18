@@ -25,17 +25,17 @@ import xml.etree.cElementTree as ET
 from uuid import uuid4
 from netaddr import IPAddress
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import synonym
 from sqlalchemy.types import Integer, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from tornado import netutil
 
 
 class IpAddress(DatabaseObject):
+
     ''' Wraps the netaddr IPAddress class '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     _address = Column(String(40), unique=True)
     _ip_address = None
