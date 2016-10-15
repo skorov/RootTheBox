@@ -8,9 +8,9 @@ function text_animation(term) {
         "  ",
         "  " + msg.toString(),
         "  ",
-        "  I have transfered $" + reward + " to your team's account.",
+        "  I have transfered " + reward + " L33T Coins to your team's account.",
         " ",
-        " Good hunting,\n    -Morris",
+        " Happy hunting,\n    - @*#&^%*@&",
     ];
     term.echo("[[b;;]*************** BEGIN SECURE COMMUNIQUE ****************]\n");
 

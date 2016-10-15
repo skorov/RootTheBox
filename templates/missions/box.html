@@ -11,7 +11,7 @@
     <div id="capture-text-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Submit Flag</h3>
+            <h3>Submit Key</h3>
         </div>
         <div class="modal-body">
             <form id="capture-text-flag-form" class="form-horizontal" method="post" action="/user/missions/capture">
@@ -19,9 +19,9 @@
                 <input id="capture-text-flag-uuid" name="uuid" value="" type="hidden" />
                 <br />
                 <div class="control-group">
-                    <label class="control-label" for="flag-token">Flag</label>
+                    <label class="control-label" for="flag-token">Key</label>
                     <div class="controls">
-                        <input autofocus required id="flag-token" name="token" type="text" placeholder="Flag" />
+                        <input autofocus required id="flag-token" name="token" type="text" placeholder="Key" />
                     </div>
                 </div>
             </form>
@@ -37,7 +37,7 @@
     <div id="capture-file-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Submit Flag</h3>
+            <h3>Submit Key</h3>
         </div>
         <div class="modal-body">
             <form id="capture-file-flag-form" class="form-horizontal" method="post" action="/user/missions/capture" enctype="multipart/form-data" >
@@ -45,7 +45,7 @@
                 <input autofocus id="capture-file-flag-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
                     <br />
-                    <label class="control-label" for="flag-file">Flag</label>
+                    <label class="control-label" for="flag-file">Key</label>
                     <div class="controls">
                         <input id="flag-file" name="flag" type="file" />
                     </div>
@@ -122,7 +122,7 @@
         <br />
         <div class="well">
             <table class="table table-hover">
-                <caption><h4> - Flags - </h4></caption>
+                <caption><h4> - Keys - </h4></caption>
                 <thead>
                     <tr>
                         <th>#</th>
@@ -203,7 +203,7 @@
                         <tr>
                             <th>#</th>
                             <th>Price</th>
-                            <th><!-- Purchse/View Button --></th>
+                            <th><!-- Purchase/View Button --></th>
                         </tr>
                     </thead>
                     <tbody>
