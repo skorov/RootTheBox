@@ -25,7 +25,7 @@ function text_animation(term) {
         "  access.",
         " ",
         "  We'll keep you updated... IF you keep finding those keys. Last we checked,",
-        "  Sarif Labs owned the [[b;;]sariflabs.cc] domain. That's probably a good place to",
+        "  Sarif Labs ownes the [[b;;]sariflabs.cc] domain. That's probably a good place to",
         "  start.",
         " ",
         " Happy hunting,\n    - @*#&^%*@&",

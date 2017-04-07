@@ -195,8 +195,8 @@ class RegistrationHandler(BaseHandler):
             if Team.by_name(self.get_argument('team_name', '')) is not None:
                 raise ValidationError("This team name is already registered")
             team = Team()
-            team.name = self.get_argument('team_name', '')
-            team.motto = self.get_argument('motto', '')
+            team.name = self.get_argument('handle', '')
+            team.motto = ''
             level_0 = GameLevel.all()[0]
             team.game_levels.append(level_0)
             return team
