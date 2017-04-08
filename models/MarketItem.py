@@ -26,6 +26,7 @@ from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.types import Unicode, Integer, String
 from models.BaseModels import DatabaseObject
+from models.SourceCode import SourceCode
 from models import dbsession
 
 
@@ -57,6 +58,10 @@ class MarketItem(DatabaseObject):
     def by_name(cls, _name):
         ''' Returns an object with a given name '''
         return dbsession.query(cls).filter_by(name=unicode(_name)).first()
+
+    @property
+    def source_code(self):
+        return SourceCode.by_market_item_id(self.id)
 
     def to_dict(self):
         ''' Returns object data as dictionary object '''

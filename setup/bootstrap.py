@@ -84,37 +84,19 @@ for css in css_files:
 
 # Market Items
 item = MarketItem(
-    name=u"Source Code Market",
-    price=500,
-    image=u"source_code_market.png",
-    description=u"Allows your team access to the Source Code Black Market where you can purchase leaked source code for certain target boxes.",
+    name=u"VPN Access",
+    price=10,
+    image=u"vpn_access.png",
+    description=u"This OpenVPN config file gives you access to the internal network!",
 )
 dbsession.add(item)
 dbsession.flush()
 
 item = MarketItem(
-    name=u"Password Security",
-    price=1000,
-    image=u"password_security.png",
-    description=u"Allows your team to upgrade their password hashes to more secure algorithms such as SHA1, and SHA256.",
-)
-dbsession.add(item)
-dbsession.flush()
-
-item = MarketItem(
-    name=u"Federal Reserve",
-    price=1750,
-    image=u"federal_reserve.png",
-    description=u"Gain access to the internal New York Federal Reserve banking system, allowing you to transfer funds to/from accounts.",
-)
-dbsession.add(item)
-dbsession.flush()
-
-item = MarketItem(
-    name=u"SWAT",
-    price=3000,
-    image=u"swat.png",
-    description=u"Gain access to the internal police computer system, allowing you to insert fraudlent arrest warrents for other players.",
+    name=u"Network Diagram",
+    price=50,
+    image=u"network_diagram.png",
+    description=u"Discover more about the environment with the network diagram",
 )
 dbsession.add(item)
 dbsession.flush()

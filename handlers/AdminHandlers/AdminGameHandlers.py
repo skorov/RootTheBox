@@ -29,6 +29,7 @@ import xml.etree.cElementTree as ET
 
 from tempfile import NamedTemporaryFile
 from models.Box import Box
+from models.MarketItem import MarketItem
 from models.Swat import Swat
 from models.GameLevel import GameLevel
 from models.User import ADMIN_PERMISSION
@@ -160,28 +161,24 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             self.render("public/404.html")
 
     def add_source_code(self):
-        box = Box.by_uuid(self.get_argument('box_uuid', ''))
-        if box is not None:
+        market = MarketItem.by_uuid(self.get_argument('market_uuid', ''))
+        if market is not None:
             file_count = len(self.request.files['source_archive'])
             if not 'source_archive' in self.request.files and 0 < file_count:
                 raise ValidationError("No file data")
             else:
-                price = self.get_argument('price', '')
-                self.create_source_code(box, price)
-                self.render('admin/upgrades/source_code_market.html',
+                self.create_source_code(market)
+                self.render('admin/view/market_objects.html',
                             errors=None)
         else:
-            raise ValidationError("The selected box does not exist")
+            raise ValidationError("The selected market does not exist")
 
-    def create_source_code(self, box, price):
+    def create_source_code(self, market):
         ''' Save file data and create object in database '''
-        description = self.get_argument('description', '')
         file_name = self.request.files['source_archive'][0]['filename']
         source_code = SourceCode(
             file_name=file_name,
-            box_id=box.id,
-            price=price,
-            description=description,
+            market_item_id=market.id,
         )
         self.dbsession.add(source_code)
         self.dbsession.flush()
@@ -191,15 +188,15 @@ class AdminSourceCodeMarketHandler(BaseHandler):
 
     def delete_source_code(self):
         ''' Delete source code file '''
-        uuid = self.get_argument('box_uuid', '')
-        box = Box.by_uuid(uuid)
-        if box is not None and box.source_code is not None:
-            box.source_code.delete_data()
-            self.dbsession.delete(box.source_code)
+        uuid = self.get_argument('market_uuid', '')
+        market = MarketItem.by_uuid(uuid)
+        if market is not None and market.source_code is not None:
+            market.source_code.delete_data()
+            self.dbsession.delete(market.source_code)
             self.dbsession.commit()
         else:
-            raise ValidationError("Box/source code does not exist")
-        self.render('admin/upgrades/source_code_market.html', errors=None)
+            raise ValidationError("Market/source code does not exist")
+        self.render('admin/view/market_objects.html', errors=None)
 
 
 class AdminSwatHandler(BaseHandler):

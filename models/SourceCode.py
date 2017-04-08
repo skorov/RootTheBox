@@ -44,9 +44,7 @@ class SourceCode(DatabaseObject):
                   default=lambda: str(uuid4())
                   )
 
-    box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    _price = Column(Integer, nullable=False)
-    _description = Column(Unicode(1024), nullable=False)
+    market_item_id = Column(Integer, ForeignKey('market_item.id'), nullable=False)
     checksum = Column(String(40))
     _file_name = Column(String(64), nullable=False)
 
@@ -66,8 +64,8 @@ class SourceCode(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
-    def by_box_id(cls, _id):
-        return dbsession.query(cls).filter_by(box_id=_id).first()
+    def by_market_item_id(cls, _id):
+        return dbsession.query(cls).filter_by(market_item_id=_id).first()
 
     @property
     def file_name(self):
@@ -97,29 +95,3 @@ class SourceCode(DatabaseObject):
         fpath = options.source_code_market_dir + '/' + self.uuid
         if os.path.exists(fpath) and os.path.isfile(fpath):
             os.unlink(fpath)
-
-    @property
-    def price(self):
-        return self._price
-
-    @price.setter
-    def price(self, value):
-        try:
-            self._price = abs(int(value))
-        except ValueError:
-            raise ValidationError("Price must be an integer")
-
-    @property
-    def description(self):
-        return self._description
-
-    @description.setter
-    def description(self, value):
-        self._description = unicode(value)[:1024]
-
-    def to_dict(self):
-        return {
-            'file_name': self.file_name,
-            'price': self.price,
-            'description': self.description,
-        }

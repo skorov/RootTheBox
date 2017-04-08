@@ -4,6 +4,7 @@
 
 {% block header %}
 <script src="/static/js/pages/market/view.js"></script>
+<script src="/static/js/pages/upgrades/source_code_market.js"></script>
 {% end %}
 
 {% block modals %}
@@ -44,7 +45,7 @@
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
             <button id="buy-market-item-submit" type="button" class="btn btn-primary">
-                Buy Upgrade
+                Buy Item
             </button>
         </div>
     </div>
@@ -91,7 +92,10 @@
                             Details
                         </a>
                         {% else %}
-                        <i>Purchased</i>
+                        <a id="download-source-code-button{{ index }}" class="btn btn-mini btn-success" data-toggle="modal" data-uuid="{{ item.uuid }}">
+                            <i class="fa fa-fw fa-download"></i>
+                            Download
+                        </a>
                         {% end %}
                     </td>
                 </tr>

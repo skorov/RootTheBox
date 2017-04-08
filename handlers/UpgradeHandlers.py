@@ -28,6 +28,7 @@ be purchased from the "Black Market" (see markethandlers.py)
 import logging
 
 from BaseHandlers import BaseHandler
+from models import MarketItem
 from models.WallOfSheep import WallOfSheep
 from models.Team import Team
 from models.Box import Box
@@ -289,26 +290,21 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
 
     @authenticated
     @use_black_market
-    @has_item("Source Code Market")
     def get(self, *args, **kwargs):
         ''' Send file to user if their team owns it '''
         uuid = self.get_argument('uuid', '')
-        box = Box.by_uuid(uuid)
-        if box is not None and box.source_code is not None:
-            user = self.get_current_user()
-            if box.source_code in user.team.purchased_source_code:
-                content_type = guess_type(box.source_code.file_name)[0]
-                if content_type is None: content_type = 'unknown/data'
-                self.set_header('Content-Type', content_type)
-                self.set_header('Content-Length', len(box.source_code.data))
-                fname = filter(lambda char: char in self.goodchars, box.source_code.file_name)
-                self.set_header('Content-Disposition',
-                    'attachment; filename=%s' % fname
-                )
-                self.write(box.source_code.data)
-                self.finish()
-            else:
-                self.render('public/404.html')
+        market = MarketItem.by_uuid(uuid)
+        if market is not None and market.source_code is not None:
+            content_type = guess_type(market.source_code.file_name)[0]
+            if content_type is None: content_type = 'unknown/data'
+            self.set_header('Content-Type', content_type)
+            self.set_header('Content-Length', len(market.source_code.data))
+            fname = filter(lambda char: char in self.goodchars, market.source_code.file_name)
+            self.set_header('Content-Disposition',
+                'attachment; filename=%s' % fname
+            )
+            self.write(market.source_code.data)
+            self.finish()
         else:
             self.render('public/404.html')
 
