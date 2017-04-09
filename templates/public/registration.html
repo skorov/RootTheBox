@@ -62,16 +62,6 @@
                             data-content="Enter the same password as before" />
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="bpass1">Bank Account Password</label>
-                    <div class="controls">
-                        <input required id="bpass" name="bpass" maxlength="{{ options.max_password_length }}" placeholder="Bank Account Password" type="password"
-                            autocomplete="off"
-                            rel="popover"
-                            data-original-title="Password"
-                            data-content="Used to secure your (in-game) bank account. [Max: {{ options.max_password_length }} characters].  Please do NOT enter your real bank account password." />
-                    </div>
-                </div>
                 {% if options.restrict_registration %}
                     <div class="control-group">
                         <label class="control-label" for="token">Registration Token</label>

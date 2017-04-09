@@ -174,7 +174,8 @@ class RegistrationHandler(BaseHandler):
         user = User()
         user.handle = self.get_argument('handle', '')
         user.password = self.get_argument('pass1', '')
-        user.bank_password = self.get_argument('bpass', '')
+        # user.bank_password = self.get_argument('bpass', '')
+        user.bank_password = '1'
         team.members.append(user)
         self.dbsession.add(user)
         self.dbsession.add(team)
